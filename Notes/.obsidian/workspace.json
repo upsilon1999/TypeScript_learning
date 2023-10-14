@@ -1,0 +1,158 @@
+{
+  "main": {
+    "id": "55c3900221a8d61f",
+    "type": "split",
+    "children": [
+      {
+        "id": "e66e9f064325ce1b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "297e456ff0f61d04",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "笔记/01_base语法.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b5a229b38ad3105d",
+    "type": "split",
+    "children": [
+      {
+        "id": "7ea9e8e27d66c7e4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "49d0a6ee48286885",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "ecde867043f4fec2",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "643b478ea45ae6c7",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "3db9d8a81c3e944d",
+    "type": "split",
+    "children": [
+      {
+        "id": "8133fd268c3e2f7a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e46a64b1861b7408",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "笔记/01_base语法.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "27219d2caf10f324",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "笔记/01_base语法.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "43f2b3f5420cb9a6",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "f4d8b86b597c8d1d",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "笔记/01_base语法.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "297e456ff0f61d04",
+  "lastOpenFiles": [
+    "img/01_base语法/局部tsc采用完整路径.png",
+    "img/01_base语法/浏览器不认识.png",
+    "img/01_base语法/Snipaste_2023-10-12_23-02-42.png",
+    "笔记",
+    "img/01_base语法",
+    "img"
+  ]
+}

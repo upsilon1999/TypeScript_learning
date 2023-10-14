@@ -8,3 +8,5 @@ let stuObj:Student={
     name:"zs",
     age:16
 }
+
+export {}
