@@ -148,6 +148,120 @@ function getParams(p:Params){
 /**************************************************************/
 
 /***********************枚举类型***************************/
+// if/switch的痛点：值和情况太多，语义化不明
+/**
+ * 下面采用的是常量解决的方式
+ * 1.不直接用数字的原因：可读性低，即if/switch语义化不明
+ * 2.所以外置常量，增加可读性
+ * 3.存在问题，getAduitStatus传入的参数status的number类型设置的太宽泛
+ * 
+ * 常量解决带来的局限性:
+ * 方法参数不能定义为具体类型，只能初级使用number,string基本类型替代，降低了代码的可读性和可维护性。
+ */
+const Status = {
+    MANAGER_ADUIT_FAIL:-1,
+    NO_ADUIT:0,
+    MANAGER_ADUIT_SUCCESS:1,
+    FINAL_ADUIT_SUCCESS:2
+}
+//审核类
+class MyAduit {
+    getAduitStatus(status:number):void{
+        if(status === Status.NO_ADUIT){
+            console.log("没有审核");
+        }else if(status === Status.MANAGER_ADUIT_SUCCESS){
+            console.log("审核通过");
+        }else if(status === Status.MANAGER_ADUIT_FAIL){
+            console.log("审核失败");
+        }
+    }
+}
 
+// 枚举的定义
+/**
+ * 用来存放一组固定的常量的序列
+ * 语法：
+ * enum 枚举的名字 {
+ *     //枚举块，内容是一个个枚举项
+ *     //枚举项的写法
+ *      键 = 值
+ * }
+ * 
+ * 要知道枚举项怎么写，的先了解枚举的分类
+ * 
+ * 枚举的底层就是一个对象，根据枚举类型的不同，映射类型也不同，
+ * 例如数字类型的枚举，除了键映射外还有一个值映射，相当于双向映射
+ * 
+ * 所以用法也不一样
+ * 枚举的名字.键  => 值
+ * 枚举的名字["键"] => 值
+ * 
+ * //数字类型的枚举，多一个双向映射
+ * 枚举的名字[数字值] => 键
+ */
+
+
+// 枚举的类型
+/**
+ *  字符串类型的枚举
+ */
+enum WeekEnd {
+	Monday = "MyMonday",
+	Tuesday = "MyTuesday",
+	Wensday = "MyWensday",
+	ThirsDay = "MyThirsDay"
+}
+
+//键 => 值
+//和对象一样，单向映射
+console.log(WeekEnd.Monday)
+console.log(WeekEnd["Monday"])
+
+
+/**
+ * 数字类型的枚举
+ * 数字枚举的值会自动计算，每次加1
+ * 从最近的一个设定了值的那项开始计算，如果都没有就从0开始
+ */
+enum MyNum {
+	Monday = 1,
+	Tuesday,
+	Wensday
+}
+
+//键 => 值
+console.log(MyNum.Monday);
+//值 => 键
+console.log(MyNum[1]);
+
+/**
+ * 枚举带来的好处
+ * 1.有默认值和可以自增加值，节省编码时间
+ * 2.语义更清晰，可读性更强
+ * 
+ * 因为枚举类型是一种值类型的数据，方法参数可以明确参数类型为枚举类型
+ */
+// 改造上面的案例
+enum StatusEnum {
+    // 利用自增的特性
+    MANAGER_ADUIT_FAIL =-1,
+    NO_ADUIT,
+    MANAGER_ADUIT_SUCCESS,
+    FINAL_ADUIT_SUCCESS
+}
+
+function getEnumStatus(status:StatusEnum){
+    // 枚举既是类型，又是一个变量
+    if(status === StatusEnum.NO_ADUIT){
+        console.log("没有审核");
+    }else if(status ===StatusEnum.MANAGER_ADUIT_SUCCESS){
+        console.log("审核通过");
+    }else if(status === StatusEnum.MANAGER_ADUIT_FAIL){
+        console.log("审核失败");
+    }
+}
+
+// 这样我们使用的时候也使用枚举值，而不是数字，可读性就极强
+getEnumStatus(StatusEnum.NO_ADUIT)
 /******************************************************* */
 export {}

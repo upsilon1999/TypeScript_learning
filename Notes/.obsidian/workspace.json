@@ -8,7 +8,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "297e456ff0f61d04",
+            "id": "4588f3fa5c83e30b",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -146,7 +146,7 @@
       "command-palette:打开命令面板": false
     }
   },
-  "active": "297e456ff0f61d04",
+  "active": "4588f3fa5c83e30b",
   "lastOpenFiles": [
     "img/01_base语法/局部tsc采用完整路径.png",
     "img/01_base语法/浏览器不认识.png",

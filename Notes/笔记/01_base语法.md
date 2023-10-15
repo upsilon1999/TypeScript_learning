@@ -175,8 +175,7 @@ any unkonown never void 元组(tuple) 可变元组
 
 "字面量数据类型"
 ```
-#### 类型讲解
-##### 根类型
+#### 根类型
 
 ```ts
 //根类型
@@ -199,7 +198,7 @@ let b2:number = 3
 
 let b3:{} = "vvv"
 ```
-##### 对象类型
+#### 对象类型
 
 ```typescript
 /*******************对象类型*****************************/
@@ -228,9 +227,236 @@ let c2:object = {
 
 /********************************************************/
 ```
-##### 枚举类型
+#### 枚举类型
+##### 枚举出现的背景
 
-##### 合成类型之联合类型
+解决多次if/switch判断中的语义化的问题
+>以前的解决方式常量解决
+
+```typescript
+// if/switch的痛点：值和情况太多
+
+/**
+
+ * 下面采用的是常量解决的方式
+
+ * 1.不直接用数字的原因：可读性低，即if/switch语义化不明
+
+ * 2.所以外置常量，增加可读性
+
+ * 3.存在问题，getAduitStatus传入的参数status的number类型设置的太宽泛
+
+ *
+
+ * 常量解决带来的局限性:
+
+ * 方法参数不能定义为具体类型，只能初级使用number,string基本类型替代，降低了代码的可读性和可维护性。
+
+ */
+
+const Status = {
+
+    MANAGER_ADUIT_FAIL:-1,
+
+    NO_ADUIT:0,
+
+    MANAGER_ADUIT_SUCCESS:1,
+
+    FINAL_ADUIT_SUCCESS:2
+
+}
+
+//审核类
+
+class MyAduit {
+
+    getAduitStatus(status:number):void{
+
+        if(status === Status.NO_ADUIT){
+
+            console.log("没有审核");
+
+        }else if(status === Status.MANAGER_ADUIT_SUCCESS){
+
+            console.log("审核通过");
+
+        }else if(status === Status.MANAGER_ADUIT_FAIL){
+
+            console.log("审核失败");
+
+        }
+
+    }
+
+}
+```
+>常量解决存在的局限性
+
+方法参数不能定义为具体类型，只能初级使用number,string基本类型替代，降低了代码的可读性和可维护性。
+
+##### 枚举的定义
+定义：用来存放一组固定的常量的序列
+>语法
+
+```typescript
+enum 枚举的名字{
+	//枚举块，内容是一个个枚举项
+	//枚举项的写法
+	键 = 值
+}
+```
+枚举的底层就是一个对象，根据枚举类型的不同，映射类型也不同，
+例如数字类型的枚举，除了键映射外还有一个值映射，相当于双向映射
+>使用
+
+```typescript
+枚举的名字.键  => 值
+枚举的名字["键"] => 值
+
+//数字类型的枚举，多一个双向映射
+枚举的名字[数字值] => 键
+```
+
+##### 枚举的分类
+>字符串枚举
+
+```typescript
+enum WeekEnd {
+	Monday = "MyMonday",
+	Tuesday = "MyTuesday",
+	Wensday = "MyWensday",
+	ThirsDay = "MyThirsDay"
+}
+
+//键 => 值
+//和对象一样，单向映射
+console.log(WeekEnd.Monday)
+console.log(WeekEnd["Monday"])
+```
+>数字枚举
+
+```typescript
+enum MyNum {
+	Monday = 1,
+	Tuesday,
+	Wensday
+}
+
+//数字枚举的值会自动计算，每次加1
+//从最近的一个设定了值的那项开始计算，如果都没有就从0开始
+
+//双重映射
+//键 => 值
+//键 => 值
+console.log(MyNum.Monday);
+
+//值 => 键
+console.log(MyNum[1]);
+```
+##### 枚举底层的样子
+将ts文件编译成js文件就可以查看
+>字符串类型的枚举
+
+```typescript
+//ts源文件
+enum WeekEnd {
+	Monday = "MyMonday",
+	Tuesday = "MyTuesday",
+	Wensday = "MyWensday",
+	ThirsDay = "MyThirsDay"
+}
+```
+
+```javascript
+//编译后的底层
+var WeekEnd;
+
+(function (WeekEnd) {
+
+    WeekEnd["Monday"] = "MyMonday";
+
+    WeekEnd["Tuesday"] = "MyTuesday";
+
+    WeekEnd["Wensday"] = "MyWensday";
+
+    WeekEnd["ThirsDay"] = "MyThirsDay";
+
+})(WeekEnd || (WeekEnd = {}));
+```
+
+>数字类型的枚举
+
+```typescript
+//ts源文件
+enum MyNum {
+	Monday = 1,
+	Tuesday,
+	Wensday
+}
+```
+
+```javascript
+//编译后的底层
+var MyNum;
+
+(function (MyNum) {
+
+    MyNum[MyNum["Monday"] = 1] = "Monday";
+
+    MyNum[MyNum["Tuesday"] = 2] = "Tuesday";
+
+    MyNum[MyNum["Wensday"] = 3] = "Wensday";
+
+})(MyNum || (MyNum = {}));
+```
+##### 枚举的好处
+ * 1.有默认值和可以自增加值，节省编码时间
+ * 2.语义更清晰，可读性更强
+ 因为枚举类型是一种值类型的数据，方法参数可以明确参数类型为枚举类型
+```typescript
+// 改造上面的案例
+
+enum StatusEnum {
+
+    // 利用自增的特性
+
+    MANAGER_ADUIT_FAIL =-1,
+
+    NO_ADUIT,
+
+    MANAGER_ADUIT_SUCCESS,
+
+    FINAL_ADUIT_SUCCESS
+
+}
+
+  
+
+function getEnumStatus(status:StatusEnum){
+
+    // 枚举既是类型，又是一个变量
+
+    if(status === StatusEnum.NO_ADUIT){
+
+        console.log("没有审核");
+
+    }else if(status ===StatusEnum.MANAGER_ADUIT_SUCCESS){
+
+        console.log("审核通过");
+
+    }else if(status === StatusEnum.MANAGER_ADUIT_FAIL){
+
+        console.log("审核失败");
+
+    }
+
+}
+
+// 这样我们使用的时候也使用枚举值，而不是数字，可读性就极强
+getEnumStatus(StatusEnum.NO_ADUIT)
+```
+
+#### 合成类型之联合类型
 
 联合类型是`或`的关系，在实际使用时，编译器会根据上下文得出他的实际类型
 >格式
@@ -272,7 +498,7 @@ console.log("编译器会自动判断成相应类型",d1);
 
 /********************************************************/
 ```
-##### 合成类型之交叉类型
+#### 合成类型之交叉类型
 交叉类型是`与`的关系，表示值需要同时满足这些类型
 >格式
 
@@ -374,7 +600,7 @@ let f2:A1 & A2 ={
 /********************************************************/
 
 ```
-##### 字面量类型
+#### 字面量类型
 可以理解为镜子类型，就是值需要与类型长得一样
 >小结
 
@@ -425,8 +651,8 @@ isStart(1)
 
 /****************************************************************/
 ```
-##### 其他类型
-###### never
+#### 其他类型
+##### never
 使用never避免出现未来扩展新的类没有对应的实现，目的是写出安全的代码
 我们目前可以知道，当交叉类型没有交集时，就是never类型.
 >面试题：never在什么情况下会被呈现
