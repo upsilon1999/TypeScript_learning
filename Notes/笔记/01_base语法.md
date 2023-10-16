@@ -703,3 +703,483 @@ function getParams(p:Params){
 
 /**************************************************************/
 ```
+##### any，unknown的两点区别和应用场景
+###### 背景
+any和unknown在开发中和第三方包源码底层经常看到，弄清楚他们的区别很重要。
+>相同点
+```sh
+any和unknown可以是任何类的父类，所以任何类型的变量都可以赋值给any类型或者unknown类型的变量
+```
+>不同点
+```sh
+1.any也可以是任何类型的子类，但unknown不可以，所以any类型的变量都可以赋值给其他类型的变量。
+
+2.不能拿unknown类型的变量来获取任何属性和方法，但any类型的变量可以获取任意名称的属性和任意名称的方法
+
+3.any代表任意，unknown只代表暂时不明确
+```
+###### any
+典型应用场景有:
+1.自定义守卫
+2.需要进行`as any`类型断言的场景
+>举例
+```typescript
+/************************any类型************************** */
+
+//#region any类型
+
+//①
+
+//any可以是任何类的父类，所以任何类型的变量都可以赋值给any类型的变量
+
+//null和undefined也可以被any接收
+
+let arr:Array<string> = ["a","b"]
+
+let num:number = 12
+
+let myArr:any = arr
+
+let myNum:any = num
+
+  
+
+//②
+
+//any也可以是任何类型的子类，所以any类型的变量都可以赋值给其他类型的变量。
+
+let str:any = "abc"
+
+let kk:number = str  //这会存在隐患，这就是any的问题
+
+//这里狭义的父子类的概念，右边的类型为子类，左边为父类
+
+  
+
+//③
+
+//any类型的变量可以获取任意名称的属性和任意名称的方法
+
+function getMyname(data:any){
+
+    // 这是可行的，但是unknown不行
+
+    console.log(data.name);
+
+}
+
+  
+
+//any作为子类的应用场景
+
+/**
+
+ * 从后端获取的值，不确定类型，就用any接受
+
+ * let book:any = 后端返回
+
+ * 明确类型后，给对应的值
+
+ * let myBook:book[] = book
+
+ */
+
+  
+
+//any作为父类的应用
+
+/**
+
+ * 1.自定义守卫，我们不确定要传递的类型，先有any占位，未来详述
+
+ */
+
+  
+
+//any还可以用于类型断言
+
+//#endregion
+
+/********************************************************* */
+```
+###### unknown
+一般用作函数参数，用来接收任意类型的变量实参，但在函数内部只用于再次传递或输出结果，不获取属性的场景。
+>举例
+```typescript
+/**************************unknown类型************************** */
+
+//#region unknown类型
+
+//unknown可以是任何类的父类，所以任何类型的变量都可以赋值给unknown类型的变量
+
+//null和undefined也可以被unknown接收
+
+let arr1:Array<string> = ["a","b"]
+
+let num1:number = 12
+
+let myArr1:unknown = arr
+
+let myNum1:unknown = num
+
+  
+
+//不能拿unknown类型的变量来获取任何属性和方法
+
+function getYourName(data:unknown){
+
+    // 报错，提示data类型是不明确的，他不确定能不能点属性
+
+    // console.log(data.name);
+
+  
+  
+
+    console.log(data);
+
+}
+
+// 但是可以接受任意类型的值，用它是所有类型父类的特性
+
+getYourName({name:"zs"})
+
+getYourName([1,2])
+
+//#endregion
+
+/************************************************************** */
+```
+
+### ts中的接口及应用场景
+
+#### 什么是接口
+
+另一种`定义对象类型`的`类型`
+
+>目的
+
+```sh
+1.定义一个对象
+2.本身也是一种类型
+```
+
+>语法
+
+```typescript
+interface 接口名 {
+    属性名:类型
+    属性名:类型
+    方法名:返回值类型
+}
+//方法是一种特殊的键值对，他的完整写法就是对象的一项
+```
+
+>使用
+
+```typescript
+let 变量:接口名 = {
+    //实现接口
+    //这个对象必须和接口规定的完全一样
+    //属性不能多也不能少，类型也必须一一对应
+}
+```
+
+>特点
+
+```sh
+接口只做定义，不做实现
+```
+
+#### 接口的应用场景
+
+>一些第三方包或者框架底层源码中有大量的接口类型
+
+>提供方法的对象类型的参数时使用
+
+```typescript
+//#region 为参数传递进行限定
+// 规范传参
+interface Book {
+    name:string
+    price:number
+}
+
+function sellBook(b:Book){
+    console.log(b.name);
+}
+
+let book1:Book = {
+    name:"野性的呼唤",
+    price:20
+}
+
+sellBook(book1)
+//#endregion
+```
+
+
+
+>为多个同类别的类提供统一的方法和属性声明
+
+```typescript
+//#region 可以用类实现接口
+//类的知识之后说，这里只是场景
+//为多个同类别的类提供统一的方法和属性声明
+/**
+ * 语法：
+ * class 类名 implements 接口名{
+ * 
+ * }
+ * 
+ * 用类实现接口，通过编译器的提示
+ * 快速修复 --> 实现接口 -->可以快速书写类的接口
+ * 
+ * 提高开发效率和规范类的结构，
+ * 规范类的结构，接口就和类的目录一样，不可随意修改，使得维护起来方便
+ */
+interface List {
+    add():void
+    remove():void
+}
+
+//以下为快速生成
+class ArrayList implements List {
+    add(): void {
+        throw new Error("Method not implemented.");
+    }
+    remove(): void {
+        throw new Error("Method not implemented.");
+    }
+  
+}
+
+//以下为快速生成
+class LinkedList implements List {
+    add(): void {
+        throw new Error("Method not implemented.");
+    }
+    remove(): void {
+        throw new Error("Method not implemented.");
+    }
+}
+  
+//#endregion
+```
+
+#### 接口的继承
+
+新的接口只是在原来的接口上增加了一些属性或方法，此时就用接口继承
+
+>语法
+
+```typescript
+interface 子接口 extends 父接口{
+       //相当于全盘复制父接口并作扩展
+ }
+```
+
+>举例
+
+```typescript
+//#region 接口的优点1：可以继承
+/**
+ * 继承的好处：
+ * 可以节省代码，提高程序的整洁度
+ * 与type相比，可继承的特点使得接口扩展性更好
+ * 
+ * 语法:
+ * 
+ * interface 子接口 extends 父接口{
+ *      //相当于全盘复制父接口并作扩展
+ * }
+ */
+interface Animal{
+    name:string
+    say():void
+}
+
+interface Dog extends Animal{
+    wang():void
+}
+//#endregion
+```
+
+#### 可索引签名及其他细节
+
+>情况
+
+```sh
+有些接口的属性名不确定，个数也不确定
+
+#这个时候就可以使用可索引签名来预留扩展
+```
+
+>格式
+
+```typescript
+[未知的代号:类型A]:类型B
+ //属性的部分 [未知的代号:类型A]
+/* 
+    通常使用 [x:string]
+    x表示未知的代号，实际上啥都行，就是设个未知数
+    string表示类型，但是值得注意：
+    ①虽然写的是string，但是属性名可以写任意类型，number、symbol、boolean都正确
+    ② 如果是其他类型，则属性名必须是相应类型，例如设为[x:number],则属性名必须是number类型
+    ③所以都设置为[x:string]方便拓展
+*/
+  
+ // 属性值的部分：
+ /* 
+ 	类型B 必须兼容之前存在的所有类型，
+  	例如 下面的Fish接口，则至少要设置为
+ 	[x:string]: string|number
+ */
+ 
+ 
+ //可索引签名表示扩展的内容必须遵循这个格式
+
+```
+
+>举例
+
+```typescript
+//#region 可索引签名
+/**
+ * 情况：
+ * 有些接口的属性名不确定，个数也不确定
+ * 
+ * 格式：
+ * [未知的代号:类型A]:类型B
+ * 
+ * 属性的部分 [未知的代号:类型A]
+ * 通常使用 [x:string]
+ * x表示未知的代号，实际上啥都行，就是设个未知数
+ * string表示类型，但是值得注意：
+ * ①虽然写的是string，但是属性名可以写任意类型，number、symbol、boolean都正确
+ * ② 如果是其他类型，则属性名必须是相应类型，例如设为[x:number],则属性名必须是number类型
+ * ③所以都设置为[x:string]方便拓展
+ * 
+ * 
+ * 属性值的部分：
+ * 类型B 必须兼容之前存在的所有类型，
+ * 例如 下面的Fish接口，则至少要设置为
+ * [x:string]: string|number
+ * 
+ * 
+ * 可索引签名表示扩展的内容必须遵循这个格式
+ */
+interface Fish {
+    name:string
+    sex:string
+    age:number
+    // 可索引签名
+    [x:string]:any
+}
+//#endregion
+```
+
+#### 拓展：同名接口会合并
+
+>同名接口
+
+```sh
+同名接口会进行合并，
+相同的属性可以重复声明，但是类型必须和第一次一致(实际上相当于不能声明)
+```
+
+>举例
+
+```typescript
+//小知识：同名接口会合并
+interface Product {
+    name:string
+    price:number
+}
+
+interface Product {
+    //同名属性可以声明，但类型必须一致
+    //实际上相当于不重复声明
+    price:number
+    buy():void
+}
+```
+
+最终相当于
+
+```typescript
+interface Product {
+    name:string
+    price:number
+    buy():void
+}
+```
+
+#### 拓展：索引的访问类型
+
+```typescript
+//小知识：同名接口会合并
+interface Product {
+    name:string
+    price:number
+}
+
+const symId = Symbol("hahah")
+interface Product {
+    //同名属性可以声明，但类型必须一致
+    //实际上相当于不重复声明
+    price:number
+    buy():void
+    [symId]:number | string
+}
+
+
+//通过接口设置索引访问类型
+/**
+ * ①
+ * type 类型A = 接口[属性名的字面量类型]
+ * 
+ * 则类型A就是 对应属性的类型
+ * 
+ * ②
+ * type 类型B = 接口[属性名1的字面量类型 | 属性名2的字面量类型]
+ * 
+ * 则类型B是对应多个属性的联合类型
+ * 
+ * ③
+ * 不要误以为 [] 里面是字符串，实际上里面是字面量类型，例如
+ * 
+ */
+type A = Product["name"]
+
+type B = Product["name"|"price"]
+
+//不使用symId的原因，symId是一个值，不是字面量类型
+//typeof symId得到 [symId]对应的字面量类型
+type C = Product[typeof symId]
+
+
+/**
+ * 需求：获取Product接口中所有属性名组成的类型
+ * 方法:
+ * keyof 接口名
+ * 
+ * 作用：
+ * 得到所有属性的字面量类型的联合类型
+ */
+
+type Pkeys = keyof Product
+//keyof Product等同于 "name"|"price"|"buy"|"typeof symId"
+
+//扩展知识，目前了解即可
+type AllKeys<T> = T extends any?T:never
+// 迭代出来
+type Pkeys2 = AllKeys<keyof Product>
+export {}
+```
+
+
+
+
+
+
+
