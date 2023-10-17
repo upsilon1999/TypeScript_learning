@@ -53,9 +53,7 @@ tsc --init
   环境干净
   ```
 
-## 基础知识
-
-### 类型注解与类型推导
+## 类型注解与类型推导
 
 ```ts
 //类型注解
@@ -86,8 +84,8 @@ let city = "罗马"
  */
 ```
 
-### Ts编译与编译优化
-#### Ts编译问题
+## Ts编译与编译优化
+### Ts编译问题
 
 >局部文件设置
 
@@ -128,7 +126,7 @@ node my.js
 ![[局部tsc采用完整路径.png]]
 解决方案：
 tsc指令后跟随需要编译文件的完整路径
-#### 编译配置
+### 编译配置
 >输出目录的配置
 
 在`tsconfig.json`中，找到`outDir`和`rootDir`,默认是注释掉的
@@ -151,7 +149,7 @@ tsc指令后跟随需要编译文件的完整路径
 
 
 
-### 常用的24中Ts类型
+## 常用的24中Ts类型
 >概述
 
 ```sh
@@ -175,7 +173,7 @@ any unkonown never void 元组(tuple) 可变元组
 
 "字面量数据类型"
 ```
-#### 根类型
+### 根类型
 
 ```ts
 //根类型
@@ -198,7 +196,7 @@ let b2:number = 3
 
 let b3:{} = "vvv"
 ```
-#### 对象类型
+### 对象类型
 
 ```typescript
 /*******************对象类型*****************************/
@@ -227,8 +225,8 @@ let c2:object = {
 
 /********************************************************/
 ```
-#### 枚举类型
-##### 枚举出现的背景
+### 枚举类型
+#### 枚举出现的背景
 
 解决多次if/switch判断中的语义化的问题
 >以前的解决方式常量解决
@@ -294,7 +292,7 @@ class MyAduit {
 
 方法参数不能定义为具体类型，只能初级使用number,string基本类型替代，降低了代码的可读性和可维护性。
 
-##### 枚举的定义
+#### 枚举的定义
 定义：用来存放一组固定的常量的序列
 >语法
 
@@ -317,7 +315,7 @@ enum 枚举的名字{
 枚举的名字[数字值] => 键
 ```
 
-##### 枚举的分类
+#### 枚举的分类
 >字符串枚举
 
 ```typescript
@@ -353,7 +351,7 @@ console.log(MyNum.Monday);
 //值 => 键
 console.log(MyNum[1]);
 ```
-##### 枚举底层的样子
+#### 枚举底层的样子
 将ts文件编译成js文件就可以查看
 >字符串类型的枚举
 
@@ -409,7 +407,7 @@ var MyNum;
 
 })(MyNum || (MyNum = {}));
 ```
-##### 枚举的好处
+#### 枚举的好处
  * 1.有默认值和可以自增加值，节省编码时间
  * 2.语义更清晰，可读性更强
  因为枚举类型是一种值类型的数据，方法参数可以明确参数类型为枚举类型
@@ -456,7 +454,7 @@ function getEnumStatus(status:StatusEnum){
 getEnumStatus(StatusEnum.NO_ADUIT)
 ```
 
-#### 合成类型之联合类型
+### 合成类型之联合类型
 
 联合类型是`或`的关系，在实际使用时，编译器会根据上下文得出他的实际类型
 >格式
@@ -498,7 +496,7 @@ console.log("编译器会自动判断成相应类型",d1);
 
 /********************************************************/
 ```
-#### 合成类型之交叉类型
+### 合成类型之交叉类型
 交叉类型是`与`的关系，表示值需要同时满足这些类型
 >格式
 
@@ -600,7 +598,7 @@ let f2:A1 & A2 ={
 /********************************************************/
 
 ```
-#### 字面量类型
+### 字面量类型
 可以理解为镜子类型，就是值需要与类型长得一样
 >小结
 
@@ -651,8 +649,8 @@ isStart(1)
 
 /****************************************************************/
 ```
-#### 其他类型
-##### never
+### 其他类型之never
+
 使用never避免出现未来扩展新的类没有对应的实现，目的是写出安全的代码
 我们目前可以知道，当交叉类型没有交集时，就是never类型.
 >面试题：never在什么情况下会被呈现
@@ -703,8 +701,8 @@ function getParams(p:Params){
 
 /**************************************************************/
 ```
-##### any，unknown的两点区别和应用场景
-###### 背景
+### any，unknown的两点区别和应用场景
+#### 背景
 any和unknown在开发中和第三方包源码底层经常看到，弄清楚他们的区别很重要。
 >相同点
 ```sh
@@ -718,7 +716,7 @@ any和unknown可以是任何类的父类，所以任何类型的变量都可以�
 
 3.any代表任意，unknown只代表暂时不明确
 ```
-###### any
+#### any
 典型应用场景有:
 1.自定义守卫
 2.需要进行`as any`类型断言的场景
@@ -802,7 +800,7 @@ function getMyname(data:any){
 
 /********************************************************* */
 ```
-###### unknown
+#### unknown
 一般用作函数参数，用来接收任意类型的变量实参，但在函数内部只用于再次传递或输出结果，不获取属性的场景。
 >举例
 ```typescript
@@ -850,9 +848,263 @@ getYourName([1,2])
 /************************************************************** */
 ```
 
-### ts中的接口及应用场景
+#### 几个案例
 
-#### 什么是接口
+>使用的键是个不定值
+
+```typescript
+let obj = {username:"zhansan"}
+let a = "username" 
+
+/*
+    由于a的值是可变的，所以他可能会被改变不等于 username
+    ts预先判断到了这种错误，故予以禁止
+*/
+//let u = obj[a]
+
+// 解决方案
+//使用不可变的常量
+const b = "username"
+let t = obj[b]
+```
+
+>避免以下的情况
+
+```typescript
+ let obj1:object = {age:18}
+
+/**
+ * 以下这个情况也会报错，是索引类型的错误
+ * 他会拿着 c代表的age这个键去和类型object对比
+ * 发现object没有规定这个索引，故报错
+ * 
+ * 尽量避免这种
+ */
+ 
+//const c = "age"
+//let k = obj1[c]
+```
+
+
+
+
+
+### null和undefined
+
+#### 回顾js中的null与undefined
+
+```js
+//javascript中null表示什么都没有，表示一个空对象引用
+let obj = null
+console.log(typeof null)//object
+
+
+//声明一个变量，但没有赋值，该变量的值为undefined
+let x
+console.log("x",x) //undefined
+console.log(typeof undefined);//undefined
+```
+
+#### ts中的null与undefined
+
+```sh
+null代表空，undefined代表未定义
+```
+
+##### 特性与配置
+
+```typescript
+let str:string
+//只给了类型，没有赋值，不允许读取/打印
+// console.log(str);
+
+let str1:string|undefined
+//允许其为undefined类型后就可以输出了
+//输出值为undefined
+console.log(str1);//undefined
+```
+
+>配置
+
+```sh
+配置项中有一个配置 
+strict是旗下所有strictXX的总和
+如果strictXxx没有设置，就采用strict的设置
+ 
+strictNullChecks
+值为 true，不允许将null和undefined赋值给其他类型
+值为 false，允许把 null和undefined赋值给其他类型
+ 
+我们采用默认的true，可以减少代码的问题
+```
+
+##### 谁可以是null或者undefined
+
+```typescript
+// any，unknown，undefined可以接受undefined
+let a:any = undefined
+let a1:unknown = undefined
+let a2:undefined = undefined
+
+//any,unknown,null 可以接受null
+let b:any = null
+let b1:unknown = null
+let b2:null =null
+```
+
+##### 变量?:类型
+
+```typescript
+/**
+ * data?:string
+ * ①相当于 data的类型是 string|undefined
+ * ② data是个可选参数
+ *
+ * data?:string 不完全等于 data:string|undefined
+ */
+function fn(data?:string){
+
+}
+
+//当函数传参为空时，如果 data:string 就会报错
+//即使设置 data:string|undefined 也需要传递参数，所以data?:string和data:string|undefined不完全一样
+fn()
+
+
+/*
+  小结：
+    变量?:类型A
+  ①变量的类型为 类型A|undefined，即原类型和undefined的联合类型
+  ②变量可选
+*/
+```
+
+##### 变量!.方法
+
+```typescript
+function fn1(data?:string){
+    //情况1
+    // 由于data可能为undefined，所以会报错
+    // data.toLowerCase()
+
+    //2.强制截断
+    /**
+     * 变量!.方法
+     * 
+     * 如果变量为undefined、null就省略，或者说不执行
+     */
+    // data!.toLowerCase()
+
+    //3.进行if判断
+    //情况2是这个的简写
+    if(data){
+        data.toLowerCase()
+    }
+
+}
+```
+
+### 函数类型
+
+#### 基本语法
+
+```typescript
+/*
+    function 函数名(参数1:类型,...):返回值类型{
+
+    }
+
+    ①参数个数确定时，调用时参数个数和类型都得一一对应
+    ②返回值类型要与实际一致，如果不指明类型，会自动推导
+*/
+function info(name:string,age:number):number{
+    console.log("我好开心");
+    return 3
+}
+```
+
+#### 函数表达式写法
+
+```typescript
+/*
+    就是从原来的格式中抽离了函数名
+*/
+let info1 = function (name:string,age:number):number{
+    console.log("我好开心");
+    return 3
+}
+```
+
+#### 函数类型的书写
+
+```typescript
+/*
+    函数类型的写法
+
+    (参数:类型,...)=>返回值类型
+*/
+let info2:(name:string,age:number)=>number = function  (name:string,age:number):number{
+    console.log("我好开心");
+    return 3
+}
+
+//限定了函数类型后，函数就必须符合类型，同时也可以进行相应简写
+let info3:(name:string,age:number)=>number = 
+function  (name,age){
+    //简写，参数类型和返回值类型不用再显式指出
+    console.log("我好开心");
+    return 3
+}
+```
+
+函数类型的写法是未来高阶必备的
+
+```sh
+(参数:类型,...)=>返回值类型
+```
+
+#### 函数类型抽离
+
+```typescript
+//函数类型很长，写在变量后可读性太差，可以用type在外部定义
+
+type InfoFn = (name:string,age:number)=>number
+
+let info4:InfoFn = function  (name,age){
+    console.log("我好开心");
+    return 3
+}
+```
+
+#### rest参数
+
+当参数个数不确定时，用来进行预留位置，rest参数是一个数组，回顾js
+
+```javascript
+function info(a,b,...arguments){
+    //arguments 不确定函数对象
+}
+```
+
+```typescript
+//所谓rest参数就是扩展参数，用于参数不确定的情况
+/*
+    rest参数的类型必须是数组，原因是他本身会被拓展运算符展开
+    ...rest:string[] 新参数都是字符串类型
+    ...rest:any      新参数类型任意
+*/
+function info5(name:string,age:number,...rest:string[]){
+    console.log("rest",rest);
+}
+```
+
+
+
+
+
+## ts中的接口及应用场景
+
+### 什么是接口
 
 另一种`定义对象类型`的`类型`
 
@@ -890,7 +1142,7 @@ let 变量:接口名 = {
 接口只做定义，不做实现
 ```
 
-#### 接口的应用场景
+### 接口的应用场景
 
 >一些第三方包或者框架底层源码中有大量的接口类型
 
@@ -966,7 +1218,7 @@ class LinkedList implements List {
 //#endregion
 ```
 
-#### 接口的继承
+### 接口的继承
 
 新的接口只是在原来的接口上增加了一些属性或方法，此时就用接口继承
 
@@ -1004,7 +1256,7 @@ interface Dog extends Animal{
 //#endregion
 ```
 
-#### 可索引签名及其他细节
+### 可索引签名及其他细节
 
 >情况
 
@@ -1078,7 +1330,7 @@ interface Fish {
 //#endregion
 ```
 
-#### 拓展：同名接口会合并
+### 拓展：同名接口会合并
 
 >同名接口
 
@@ -1114,7 +1366,7 @@ interface Product {
 }
 ```
 
-#### 拓展：索引的访问类型
+### 拓展：索引的访问类型
 
 ```typescript
 //小知识：同名接口会合并
